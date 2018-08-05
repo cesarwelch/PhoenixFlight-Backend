@@ -5,7 +5,7 @@ module.exports = {
         return Guest.create({
             name: req.body.name,
             email: req.body.email,
-            response: req.body.response
+            response: req.body.response,
             plusone: req.body.plusone,
             plusonelist: req.body.plusonelist,
         }).then(guest => res.status(201).send(guest)).catch(error => res.status(400).send(error));
