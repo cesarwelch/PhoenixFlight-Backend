@@ -1,4 +1,4 @@
-const Guest = require('../models').Guest;
+const Guest = require('../models').guest;
 
 module.exports = {
   create(req, res) {
