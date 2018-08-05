@@ -6,8 +6,9 @@ module.exports = {
       .create({
         name: req.body.name,
         email: req.body.email,
-        language: req.body.language,
-        plus_one: req.body.plus_one
+        plusone: req.body.plusone,
+        plusonelist: req.body.plusonelist,
+        binaryId: req.body.binaryId
       })
       .then(guest => res.status(201).send(guest))
       .catch(error => res.status(400).send(error));
