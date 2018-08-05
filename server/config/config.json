@@ -1,23 +1,21 @@
 {
   "development": {
-    "username": "hgfmlzdahfmpfu",
-    "password": "0fa858d222bc4c4102ac252db577a7b67395514509ca38c3eccd5ead16050903",
-    "database": "ddi00bhb8j9lfq",
-    "host": "ec2-50-17-250-38.compute-1.amazonaws.com",
-    "dialect": "postgres"
+    "use_env_variable": "DATABASE_URL"
   },
   "test": {
     "username": "root",
     "password": null,
     "database": "wedding-staging",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "ssl": true
   },
   "production": {
     "username": "root",
     "password": null,
     "database": "wedding-prod",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "ssl": true
   }
 }
