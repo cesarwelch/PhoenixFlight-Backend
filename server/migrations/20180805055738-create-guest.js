@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('guests', {
+    return queryInterface.createTable('Guests', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,13 +14,14 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
+      response: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       plusone: {
         type: Sequelize.INTEGER
       },
       plusonelist: {
-        type: Sequelize.STRING
-      },
-      binaryId: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -34,6 +35,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('guests');
+    return queryInterface.dropTable('Guests');
   }
 };
