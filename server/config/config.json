@@ -3,19 +3,9 @@
     "use_env_variable": "DATABASE_URL"
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "wedding-staging",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "ssl": true
+    "use_env_variable": "DATABASE_URL"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "wedding-prod",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "ssl": true
+    "use_env_variable": "DATABASE_URL"
   }
 }
