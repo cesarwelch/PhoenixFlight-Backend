@@ -16,6 +16,7 @@ module.exports = {
     updateIds(req, res) {
         return Guest.all().then(guests => {
             for (var i = 0; i < guests.length; i++) {
+              guests[i].dataValues = md5(guests[i].dataValues.id);
             }
             res.status(200).send(guests);
         }).catch(error => res.status(400).send(error));
