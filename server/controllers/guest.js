@@ -10,11 +10,18 @@ module.exports = {
             email: req.body.email,
             response: req.body.response,
             plusone: req.body.plusone,
-            plusonelist: req.body.plusonelist,
+            plusonelist: req.body.plusonelist
         }).then(guest => res.status(201).send(guest)).catch(error => res.status(400).send(error));
     },
     list(req, res) {
-        return Guest.all().then(guests => res.status(200).send(guests)).catch(error => res.status(400).send(error));
+        return Guest.all().then(guests => res.status(200).send(guests)).catch(error => {console.log(error); res.status(400).send(error);});
+    },
+    updateGuestList(req, res) {
+        console.log("lolol")
+        return Guest.update(
+            {plusonelist: req.body.plusonelist},
+            {where: sequelize.where(sequelize.fn('MD5', sequelize.cast(sequelize.col("id"), 'text')), req.body.id)}
+            ).then(guest => res.status(204).send(guest)).catch(error => res.status(400).send(error));
     },
     updateIds(req, res) {
         return Guest.all().then(guests => {
