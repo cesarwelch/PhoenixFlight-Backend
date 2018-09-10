@@ -60,12 +60,13 @@ module.exports = {
         }).then(guests => res.status(200).send(guests)).catch(error => res.status(400).send(error));
     },
     sendemail(req, res) {
-        var mailOptions = {
+                    var mailOptions = {
             from: 'FernandezCanoWedding@gmail.com',
-            to: 'pqwepo102390128412dsadbaskdaskdjasdkjahsdlkjd21j12n21  2321312@gmail.com',
+            to: 'FernandezCanoWedding100@sharklasers.com',
             subject: 'Sending Email using Node.js',
             text: 'That was easy!'
         };
+        console.log('FernandezCanoWedding100@sharklasers.com')
         transporter.sendMail(mailOptions, function(error, info) {
             console.log("lolol")
             if (error) {
@@ -74,5 +75,6 @@ module.exports = {
                 console.log('Email sent: ' + info.response);
             }
         });
+
     }
 };
