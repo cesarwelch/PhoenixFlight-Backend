@@ -24,6 +24,10 @@ module.exports = {
       plusonelist: {
         type: Sequelize.STRING
       },
+      invitationsent: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -3,7 +3,6 @@ var md5 = require('md5');
 var _ = require('lodash');
 const sequelize = require('sequelize');
 
-
 var nodemailer = require('nodemailer');
 
 var transporter = nodemailer.createTransport({
@@ -14,8 +13,6 @@ var transporter = nodemailer.createTransport({
   }
 });
 
-
-
 module.exports = {
     create(req, res) {
         return Guest.create({
@@ -24,6 +21,7 @@ module.exports = {
             response: req.body.response,
             plusone: req.body.plusone,
             plusonelist: req.body.plusonelist
+            invitationsent: req.body.invitationsent
         }).then(guest => res.status(201).send(guest)).catch(error => res.status(400).send(error));
     },
     list(req, res) {
@@ -60,7 +58,7 @@ module.exports = {
         }).then(guests => res.status(200).send(guests)).catch(error => res.status(400).send(error));
     },
     sendemail(req, res) {
-                    var mailOptions = {
+        var mailOptions = {
             from: 'FernandezCanoWedding@gmail.com',
             to: 'FernandezCanoWedding100@sharklasers.com',
             subject: 'Sending Email using Node.js',

@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     response: DataTypes.BOOLEAN,
     plusone: DataTypes.INTEGER,
-    plusonelist: DataTypes.STRING
+    plusonelist: DataTypes.STRING,
+    invitationsent: DataTypes.BOOLEAN
   }, {});
   Guest.associate = function(models) {
     // associations can be defined here
