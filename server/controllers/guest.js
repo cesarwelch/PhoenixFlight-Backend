@@ -20,7 +20,7 @@ module.exports = {
             email: req.body.email,
             response: req.body.response,
             plusone: req.body.plusone,
-            plusonelist: req.body.plusonelist
+            plusonelist: req.body.plusonelist,
             invitationsent: req.body.invitationsent
         }).then(guest => res.status(201).send(guest)).catch(error => res.status(400).send(error));
     },
