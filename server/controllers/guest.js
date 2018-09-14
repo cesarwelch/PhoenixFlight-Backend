@@ -83,7 +83,7 @@ module.exports = {
                     from: 'admin@FernandezCanoWedding.com',
                     subject: 'Hello' + guests[i].name,
                     text: 'Hello plain world!',
-                    html: '<p>Hello HTML world!</p>'
+                    html: '<img src="https://res.cloudinary.com/fernandez-cano/image/upload/v1536912680/email.png" alt="">'
                 })
             }
             sgMail.send(msg).then(() => {
