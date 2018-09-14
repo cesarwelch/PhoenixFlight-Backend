@@ -11,5 +11,6 @@ module.exports = (app) => {
   app.put('/api/guest/updateGuestList', guestsController.updateGuestList);
   app.put('/api/guest/denyResponse', guestsController.denyResponse);
   app.get('/api/guest/:binaryId', guestsController.searchBinaryId);
-  app.get('/api/sendemail', guestsController.sendemail);
+  app.get('/api/pdf/:plusone', guestsController.getPdf)
+  app.post('/api/sendemail', guestsController.sendemail);
 };

@@ -2,16 +2,10 @@ const Guest = require('../models').Guest;
 var md5 = require('md5');
 var _ = require('lodash');
 const sequelize = require('sequelize');
-
-var nodemailer = require('nodemailer');
-
-var transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'FernandezCanoWedding@gmail.com',
-    pass: 'canofernandez123'
-  }
-});
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const Op = sequelize.Op;
+const fs = require('fs');
 
 module.exports = {
     create(req, res) {
@@ -57,22 +51,61 @@ module.exports = {
             where: sequelize.where(sequelize.fn('MD5', sequelize.cast(sequelize.col("id"), 'text')), req.params.binaryId)
         }).then(guests => res.status(200).send(guests)).catch(error => res.status(400).send(error));
     },
-    sendemail(req, res) {
-        var mailOptions = {
-            from: 'FernandezCanoWedding@gmail.com',
-            to: 'FernandezCanoWedding100@sharklasers.com',
-            subject: 'Sending Email using Node.js',
-            text: 'That was easy!'
-        };
-        console.log('FernandezCanoWedding100@sharklasers.com')
-        transporter.sendMail(mailOptions, function(error, info) {
-            console.log("lolol")
-            if (error) {
-                console.log(error);
+    getPdf(req, res) {
+        var tempFile = "./server/assets/printable" + req.params.plusone + ".pdf";
+        fs.readFile(tempFile, function(err, data) {
+            if (err) {
+                res.status(400).send(err)
             } else {
-                console.log('Email sent: ' + info.response);
+              res.status(200)
+              res.contentType("application/pdf");
+              res.send(data); 
             }
-        });
 
+        })
+    },
+    sendemail(req, res) {
+        Guest.findAll({
+            where: {
+                id: {
+                    [Op.gte]: req.body.index,
+                    [Op.lte]: req.body.offset
+                }
+            },
+            attributes: [
+                [sequelize.fn('MD5', sequelize.cast(sequelize.col("id"), 'text')), 'id'], 'name', 'email', 'invitationsent'
+            ]
+        }).then(guests => {
+            let msg = [];
+            for (var i = 0; i < guests.length; i++) {
+                msg.push({
+                    to: guests[i].email,
+                    from: 'admin@FernandezCanoWedding.com',
+                    subject: 'Hello' + guests[i].name,
+                    text: 'Hello plain world!',
+                    html: '<p>Hello HTML world!</p>'
+                })
+            }
+            sgMail.send(msg).then(() => {
+                return res.status(200).send({
+                    "sended": guests
+                })
+            }).catch(error => {
+                //Log friendly error
+                console.error(error.toString());
+                //Extract error msg
+                const {
+                    message,
+                    code,
+                    response
+                } = error;
+                //Extract response msg
+                const {
+                    headers,
+                    body
+                } = response;
+                return res.status(400).send(error)
+            })
+        }).catch(error => res.status(400).send(error));
     }
 };
