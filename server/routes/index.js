@@ -8,6 +8,7 @@ module.exports = (app) => {
 
   app.post('/api/guest', guestsController.create);
   app.get('/api/guest', guestsController.list);
+  app.get('/api/filteredList', guestsController.filteredList);
   app.put('/api/guest/updateGuestList', guestsController.updateGuestList);
   app.put('/api/guest/denyResponse', guestsController.denyResponse);
   app.get('/api/guest/:binaryId', guestsController.searchBinaryId);

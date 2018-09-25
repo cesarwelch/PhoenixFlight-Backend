@@ -6,7 +6,6 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Op = sequelize.Op;
 const fs = require('fs');
-
 module.exports = {
     create(req, res) {
         return Guest.create({
@@ -57,12 +56,21 @@ module.exports = {
             if (err) {
                 res.status(400).send(err)
             } else {
-              res.status(200)
-              res.contentType("application/pdf");
-              res.send(data); 
+                res.status(200)
+                res.contentType("application/pdf");
+                res.send(data);
             }
-
         })
+    },
+    filteredList(req, res) {
+        Guest.findAll({
+            order: [
+                ['id', 'ASC'],
+            ],
+            attributes: [
+                'id','name', 'response', 'plusonelist', 'invitationsent'
+            ]
+        }).then(guests => res.status(200).send(guests)).catch(error => res.status(400).send(error));
     },
     sendemail(req, res) {
         Guest.findAll({
@@ -73,23 +81,35 @@ module.exports = {
                 }
             },
             attributes: [
-                [sequelize.fn('MD5', sequelize.cast(sequelize.col("id"), 'text')), 'id'], 'name', 'email', 'invitationsent'
+                [sequelize.fn('MD5', sequelize.cast(sequelize.col("id"), 'text')), 'id'], 'name', 'email', 'plusone', 'invitationsent'
             ]
         }).then(guests => {
             let msg = [];
             for (var i = 0; i < guests.length; i++) {
                 msg.push({
                     to: guests[i].email,
-                    from: 'admin@FernandezCanoWedding.com',
-                    subject: 'Hello' + guests[i].name,
-                    text: 'Hello plain world!',
-                    html: '<img src="https://res.cloudinary.com/fernandez-cano/image/upload/v1536912680/email.png" alt="">'
+                    from: 'Invitacion@fernandezcanowedding.com',
+                    subject: 'Boda Fernández-Cano',
+                    text: 'Invitacion',
+                    html: '<div class="container" style="position: relative;text-align: center;color: gray;"><a class="bottom-right" href="http://www.fernandezcanowedding.com/guest/' + guests[i].id + '" style="position: absolute;top: 32%;right: 11%;font-family: Playball,cursive;color: white;">        <img src="https://res.cloudinary.com/fernandez-cano/image/upload/v1536912680/test.gif" style="width:100%;">        </img>    </a>    <div style="font-weight:bold; color: gray;">' + guests[i].name + '</div><div style="position: relative;text-align: center;color: gray;">Se han reservado para usted ' + guests[i].plusone + ' espacios</div><h5 style="font-weight: normal;">(Hemos creado una invitación única para usted. Porfavor no comparta este email con nadie mas.)</h5></div>'
                 })
+                console.log(guests[i])
             }
             sgMail.send(msg).then(() => {
-                return res.status(200).send({
-                    "sended": guests
-                })
+                Guest.update({
+                    invitationsent: true
+                }, {
+                    where: {
+                        id: {
+                            [Op.gte]: req.body.index,
+                            [Op.lte]: req.body.offset
+                        }
+                    }
+                }).then(guest => {
+                    return res.status(200).send({
+                        "sended": guests
+                    })
+                }).catch(error => res.status(400).send(error));
             }).catch(error => {
                 //Log friendly error
                 console.error(error.toString());
@@ -108,4 +128,4 @@ module.exports = {
             })
         }).catch(error => res.status(400).send(error));
     }
-};
+}
