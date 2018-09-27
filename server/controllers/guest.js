@@ -34,14 +34,25 @@ module.exports = {
     },
     denyResponse(req, res) {
         return Guest.update({
-            plusonelist: '[]',
+            plusonelist: '{}',
             response: false
         }, {
             where: {
                 "id": req.body.id
             }
         }).then(guest => {
-            console.log(guest)
+            res.status(200).send(guest)
+        }).catch(error => res.status(400).send(error));
+    },
+    resetGuest(req, res){
+        return Guest.update({
+            response: null,
+            plusonelist: '{}',
+        }, {
+            where: {
+                "id": req.body.id
+            }
+        }).then(guest => {
             res.status(200).send(guest)
         }).catch(error => res.status(400).send(error));
     },
@@ -67,9 +78,7 @@ module.exports = {
             order: [
                 ['id', 'ASC'],
             ],
-            attributes: [
-                'id','name', 'response', 'plusonelist', 'invitationsent'
-            ]
+            attributes: ['id', 'name', 'response', 'plusonelist', 'invitationsent',sequelize.fn('MD5', sequelize.cast(sequelize.col("id"), 'text')), 'id']
         }).then(guests => res.status(200).send(guests)).catch(error => res.status(400).send(error));
     },
     sendemail(req, res) {
@@ -93,7 +102,7 @@ module.exports = {
                     text: 'Invitacion',
                     html: '<div class="container" style="position: relative;text-align: center;color: gray;"><a class="bottom-right" href="http://www.fernandezcanowedding.com/guest/' + guests[i].id + '" style="position: absolute;top: 32%;right: 11%;font-family: Playball,cursive;color: white;">        <img src="https://res.cloudinary.com/fernandez-cano/image/upload/v1536912680/test.gif" style="width:100%;">        </img>    </a>    <div style="font-weight:bold; color: gray;">' + guests[i].name + '</div><div style="position: relative;text-align: center;color: gray;">Se han reservado para usted ' + guests[i].plusone + ' espacios</div><h5 style="font-weight: normal;">(Hemos creado una invitación única para usted. Porfavor no comparta este email con nadie mas.)</h5></div>'
                 })
-                console.log(guests[i])
+                console.log(guests[i].dataValues)
             }
             sgMail.send(msg).then(() => {
                 Guest.update({
