@@ -32,6 +32,19 @@ module.exports = {
             res.status(200).send(guest)
         }).catch(error => res.status(400).send(error));
     },
+    updateGuest(req, res) {
+        return Guest.update({
+            plusone: req.body.plusonelist,
+            name: req.body.name,
+            email: req.body.email
+        }, {
+            where: {
+                "id": req.body.id
+            }
+        }).then(guest => {
+            res.status(200).send(guest)
+        }).catch(error => res.status(400).send(error));
+    },
     denyResponse(req, res) {
         return Guest.update({
             plusonelist: '{}',
