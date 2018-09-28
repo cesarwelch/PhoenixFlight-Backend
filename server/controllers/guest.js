@@ -34,7 +34,7 @@ module.exports = {
     },
     updateGuest(req, res) {
         return Guest.update({
-            plusone: req.body.plusonelist,
+            plusone: req.body.plusone,
             name: req.body.name,
             email: req.body.email
         }, {
