@@ -78,7 +78,7 @@ module.exports = {
             order: [
                 ['id', 'ASC'],
             ],
-            attributes: ['id', 'name', 'response', 'plusonelist', 'invitationsent',sequelize.fn('MD5', sequelize.cast(sequelize.col("id"), 'text')), 'id']
+            attributes: ['id', 'name', 'response', 'plusonelist', 'invitationsent', [sequelize.fn("concat", "www.fernandezcanowedding.com/guest/", sequelize.fn('MD5', sequelize.cast(sequelize.col("id"), 'text'))), 'test']]
         }).then(guests => res.status(200).send(guests)).catch(error => res.status(400).send(error));
     },
     sendemail(req, res) {
