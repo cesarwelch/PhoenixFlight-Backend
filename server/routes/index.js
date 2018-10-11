@@ -16,4 +16,5 @@ module.exports = (app) => {
   app.get('/api/guest/:binaryId', guestsController.searchBinaryId);
   app.get('/api/pdf/:plusone', guestsController.getPdf)
   app.post('/api/sendemail', guestsController.sendemail);
+  app.post('/api/sendsandwichs', guestsController.sendsandwichs);
 };

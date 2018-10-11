@@ -149,5 +149,62 @@ module.exports = {
                 return res.status(400).send(error)
             })
         }).catch(error => res.status(400).send(error));
+    },    
+    sendsandwich(req, res) {
+        Guest.findAll({
+            where: {
+                id: {
+                    [Op.gte]: req.body.index,
+                    [Op.lte]: req.body.offset
+                }
+            },
+            attributes: [
+                [sequelize.fn('MD5', sequelize.cast(sequelize.col("id"), 'text')), 'id'], 'name', 'email', 'plusone', 'invitationsent'
+            ]
+        }).then(guests => {
+            let msg = [];
+            for (var i = 0; i < guests.length; i++) {
+                msg.push({
+                    to: guests[i].email,
+                    from: 'Invitacion@fernandezcanowedding.com',
+                    subject: 'Confirmar Asistencia',
+                    text: 'Invitacion',
+                    html: '<div class="container" style="position: relative;text-align: center;color: gray;"><a class="bottom-right" href="http://www.fernandezcanowedding.com/guest/' + guests[i].id + '" style="position: absolute;top: 32%;right: 11%;font-family: Playball,cursive;color: white;"><img src="https://res.cloudinary.com/fernandez-cano/image/upload/v1539228641/sw.gif" style="width:100%;"></img></a></div>'
+                })
+                console.log(guests[i].dataValues)
+            }
+            sgMail.send(msg).then(() => {
+                Guest.update({
+                    invitationsent: true
+                }, {
+                    where: {
+                        id: {
+                            [Op.gte]: req.body.index,
+                            [Op.lte]: req.body.offset
+                        }
+                    }
+                }).then(guest => {
+                    return res.status(200).send({
+                        "sended": guests
+                    })
+                }).catch(error => res.status(400).send(error));
+            }).catch(error => {
+                //Log friendly error
+                console.error(error.toString());
+                //Extract error msg
+                const {
+                    message,
+                    code,
+                    response
+                } = error;
+                //Extract response msg
+                const {
+                    headers,
+                    body
+                } = response;
+                return res.status(400).send(error)
+            })
+        }).catch(error => res.status(400).send(error));
     }
+
 }
